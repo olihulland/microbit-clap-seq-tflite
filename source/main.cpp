@@ -25,6 +25,7 @@ void onClick(MicroBitEvent) {   // click button a to reset
 
 void onClap(MicroBitEvent) {    // on clap adds to clapDeltas list
     uint64_t time = uBit.timer.getTime();
+    if (time-prevTime > 3000) reset();
     if (clapDeltasIndex == 0) prevTime = time;
     clapDeltas[clapDeltasIndex] = time - prevTime;
     clapDeltasIndex++;
