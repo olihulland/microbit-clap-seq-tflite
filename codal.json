@@ -1,0 +1,27 @@
+{
+    "target": {
+        "name": "codal-microbit-v2",
+        "info": "This target specifies the micro:bit V2, based on the nordic NRF52833",
+        "device_url": "",
+        "url": "https://github.com/olihulland/codal-microbit-v2",
+        "branch": "feature/clap-detection",
+        "type": "git",
+        "test_ignore": true,
+        "dev": true
+    },
+    "libraries": [
+        {
+            "name": "codal-tflite",
+            "info": "TensorFlow Lite Micro Integration",
+            "url": "https://github.com/olihulland/codal-tflite",
+            "branch": "main",
+            "type": "git"
+        }
+    ],
+    "config": {
+        "DEVICE_BLE": 0,
+        "DEVICE_DMESG": 1,
+        "DMESG_SERIAL_DEBUG": 1,
+        "CODAL_DEBUG": 1
+    }
+}
