@@ -3,13 +3,18 @@ import pandas as pd
 import numpy as np
 import os
 
-with open("data.csv", "r") as file:
+with open("data_more.csv", "r") as file:
     isWake = []
     claps = []
     for line in file:
         asList = line.split(",")
         isWake.append(1 if asList[-1].strip() == "true" else 0)
         claps.append(list(map(lambda numStr: int(numStr), asList[:-1])))
+
+    # shuffle
+    combined = list(zip(claps, isWake))
+    np.random.shuffle(combined)
+    claps, isWake = zip(*combined)
 
     MAX_LEN_CLAPS = 10
 
@@ -26,6 +31,13 @@ with open("data.csv", "r") as file:
     # make labels numerical
     labels = labels.astype(int)
 
+    # split into train and test
+    num_train = int(len(features) * 0.8)
+    train_features = padded_features[:num_train]
+    train_labels = labels[:num_train]
+    test_features = padded_features[num_train:]
+    test_labels = labels[num_train:]
+
     # create model
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(64, activation="relu", input_shape=(MAX_LEN_CLAPS,)),
@@ -35,7 +47,11 @@ with open("data.csv", "r") as file:
 
     model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
 
-    model.fit(padded_features, labels, epochs=50)
+    model.fit(train_features, train_labels, epochs=50)
+
+    # evaluate
+    test_loss, test_acc = model.evaluate(test_features, test_labels, verbose=2)
+    print(f"Test accuracy: {test_acc}")
 
 
     # convert to tflite format
